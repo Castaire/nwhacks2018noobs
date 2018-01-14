@@ -1,5 +1,5 @@
 pragma solidity ^0.4.0;
-contract TravelPlan {
+contract TravelManager {
 
     struct Participant {
         address id;
@@ -28,13 +28,16 @@ contract TravelPlan {
     mapping(address => Participant) participants;
 
     /// Create a new trip with given params.
-    function TravelPlan(string beginDate, string tripSummary, string location, uint totalPrice, uint8 numParticipants, uint8 maxParticipants) public {
+    function TravelManager() {
+    }
+    
+    function addNewTrip(string beginDate, string tripSummary, string location, uint totalPrice, uint8 maxParticipants) public returns (uint id){
         
     
     	Trip storage trip; 
         trip.ownerParticipant = msg.sender;
         trip.beginDate = beginDate;
-        trip.numParticipants = numParticipants;
+        trip.numParticipants = 0;
         trip.maxParticipants = maxParticipants;
         trip.tripSummary = tripSummary;
         trip.location = location;
@@ -45,6 +48,8 @@ contract TravelPlan {
         trip.tripId = numTrips++;
 
         allTrips.push(trip);
+        
+        return trip.tripId;
     }
 
 
