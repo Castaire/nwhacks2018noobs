@@ -10,12 +10,15 @@ contract TravelPlan {
         string64 biblio;
     }
     struct Trip {
-        // uint tripId;
+        uint tripId;
         address ownerParticipant;
         string64 tripSummary;
         string location;
         Purchase[] purchases;
+        uint8 numParticipants;
         uint8 maxParticipants;
+        bool isCancelled;
+        Participant[] involvedParticipants;
     }
     struct Purchase {
         string itemType;
@@ -23,18 +26,53 @@ contract TravelPlan {
         uint price;
     }
 
-    Trip trip;
+
+    uint constant numTrips = 0;
+    Trip[] allTrips;
     mapping(address => Participant) participants;
 
     /// Create a new trip with given params.
     function TravelPlan(uint8 maxParticipants, string64 tripSummary, string location, Purchase[] purchases) public {
 
+    	Trip trip; 
         trip.ownerParticipant = msg.sender;
         trip.maxParticipants = maxParticipants;
         trip.tripSummary = tripSummary;
         trip.location = location;
         trip.purchases = purchases;
+        trip.isCancelled = false;
+        trip.involvedParticipants.length = maxParticipants;
+
+        trip.tripId = numTrips++;
+
+        allTrips.push(trip);
     }
+
+
+    // ASSUME: participant has enough money
+    // WARNING: underscore before 'success' (bool)?
+    /// adds new participant
+    function addInvolvedParticipant(uint tripId) returns (bool success) {
+    	Trip trip = allTrips[tripId];
+
+    	if(trip.numParticipants == trip.maxParticipants){
+    		return false;
+    	}
+
+    	// add participant
+    	Participant currentParticipant = trip.participants[msg.sender];
+    	trip.involvedParticipants.push(currentParticipant);
+    	trip.numParticipants++;
+    	
+    	
+    }
+
+
+
+
+
+
+
 
     /// Give $(toVoter) the right to vote on this ballot.
     /// May only be called by $(chairperson).
