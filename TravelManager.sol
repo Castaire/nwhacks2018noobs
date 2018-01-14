@@ -23,12 +23,13 @@ contract TravelManager {
     }
 
 
-    uint numTrips = 0;
+    uint numTrips;
     Trip[] allTrips;
     mapping(address => Participant) participants;
 
     /// Create a new trip with given params.
     function TravelManager() {
+        numTrips = 0;
     }
     
     function addNewTrip(string beginDate, string tripSummary, string location, uint totalPrice, uint8 maxParticipants) public returns (uint id){
@@ -45,7 +46,8 @@ contract TravelManager {
         trip.isCancelled = false;
         // trip.involvedParticipants.length = maxParticipants;
 
-        trip.tripId = numTrips++;
+        trip.tripId = numTrips;
+        numTrips++;
 
         allTrips[trip.tripId] = trip;
         
@@ -89,5 +91,14 @@ contract TravelManager {
             Trip storage t = allTrips[tId];
             return (t.tripId, t.ownerParticipant, t.beginDate, t.numParticipants, t.maxParticipants, t.tripSummary, t.location, t.totalPrice, t.isCancelled);
         }
+
+    function getParticipantsInTrip(uint tId, uint i) public constant returns ( // FOR DEBUGGING PURPOSES ONLY
+        string firstNames,
+        string lastNames,
+        uint ages
+    ){
+        Trip storage t = allTrips[tId];
+        return (participants[t.participantAddresses[i]].firstName, participants[t.participantAddresses[i]].lastName, participants[t.participantAddresses[i]].age);
+    }
 
 }
