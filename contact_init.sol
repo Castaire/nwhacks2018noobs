@@ -19,7 +19,7 @@ contract TravelManager {
         uint8 numParticipants;
         uint8 maxParticipants;
         bool isCancelled;
-        Participant[] involvedParticipants;
+        address[] participantAddresses;
     }
 
 
@@ -47,7 +47,7 @@ contract TravelManager {
 
         trip.tripId = numTrips++;
 
-        allTrips.push(trip);
+        allTrips[trip.tripId] = trip;
         
         return trip.tripId;
     }
@@ -56,7 +56,7 @@ contract TravelManager {
     // ASSUME: participant has enough money
     // WARNING: underscore before 'success' (bool)?
     /// adds new participant
-    function addInvolvedParticipant(uint tripId) returns (bool success) {
+    function addInvolvedParticipant(uint tripId, string firstName, string lastName, string streetAddress, uint age, string biblio) returns (bool) {
     	Trip storage trip = allTrips[tripId];
 
     	if (trip.numParticipants == trip.maxParticipants) {
@@ -64,8 +64,13 @@ contract TravelManager {
     	}
 
     	// add participant
-    	Participant storage currentParticipant = participants[msg.sender];
-    	trip.involvedParticipants.push(currentParticipant);
+
+    	participants[msg.sender].firstName = firstName;
+    	participants[msg.sender].lastName = lastName;
+    	participants[msg.sender].streetAddress = streetAddress;
+    	participants[msg.sender].age = age;
+    	participants[msg.sender].biblio = biblio;
+    	trip.participantAddresses.push(msg.sender);
     	trip.numParticipants++;
     	
     	return true;
