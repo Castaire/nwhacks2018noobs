@@ -75,5 +75,19 @@ contract TravelManager {
     	
     	return true;
     }
+    
+    function getTripById(uint tId) public constant returns (
+        uint tripId,
+        address ownerParticipant,
+        string beginDate,
+        uint8 numParticipants,
+        uint8 maxParticipants,
+        string tripSummary,
+        string location,
+        uint totalPrice,
+        bool isCancelled) {
+            Trip storage t = allTrips[tId];
+            return (t.tripId, t.ownerParticipant, t.beginDate, t.numParticipants, t.maxParticipants, t.tripSummary, t.location, t.totalPrice, t.isCancelled);
+        }
 
 }
